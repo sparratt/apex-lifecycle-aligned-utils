@@ -20,9 +20,9 @@ pipeline {
         ZIP_FILE = "${GIT_FOLDER}_${BUILD_NUMBER_PADDED}.zip"
         MAX_CONCURRENT_BUILDS = 1
         PORT_OFFSET = 0
-        PORT_DB_LISTENER = (8521 + PORT_OFFSET).toString()
+        PORT_DB_LISTENER = (1521 + PORT_OFFSET).toString()
         PORT_DB_OMA = (8500 + PORT_OFFSET).toString()
-        PORT_HTTP = (8023 + PORT_OFFSET).toString()
+        PORT_HTTP = (80 + PORT_OFFSET).toString()
         PORT_HTTPS = (9043 + PORT_OFFSET).toString()
         DB = "localhost:${PORT_DB_LISTENER}/FREEPDB1"
         BUILD_PASSWORD = 'E'
