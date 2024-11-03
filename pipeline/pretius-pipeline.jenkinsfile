@@ -1,20 +1,20 @@
 pipeline {
     agent any
    
-    environment {
+     environment {
         //Project Settings
         GIT_REPOSITORY = 'https://github.com/Pretius/pretius-apex-lifecycle-aligned-sample-customers'
         GIT_BRANCH = 'main'
         CREATE_BUILD = false
-        DEVELOPMENT_DB_CONN = 'development-username/development-password@//development-host:1521/my-dev-db'
+        DEVELOPMENT_DB_CONN = 'MARINEDATAREGISTER/Oracle_2023@//localhost:1521/ORCLPDB1'
         APPLICATION_ALIAS = "sample_customers"
         // Jenkins Settings
-        BASE_LOCATION = "/home/opc"
+        BASE_LOCATION = "/Users/sllopart/dev/oracle/cicd/"
         PWD_LOCATION = sh(returnStdout: true, script: 'pwd').trim()
         GIT_FOLDER = 'project'
         GIT_WORKAREA = "${PWD_LOCATION}/${GIT_FOLDER}"
         PROJECT_SHORT = 'scu'
-        SCRIPTS_LOCATION = '/home/opc/pretius-apex-lifecycle-aligned-utils/pipeline-scripts'
+        SCRIPTS_LOCATION = '/Users/sllopart/dev/oracle/cicd/apex-lifecycle-aligned-utils/pipeline-scripts'
         BUILD_NUMBER = env.BUILD_NUMBER.toInteger()
         BUILD_NUMBER_PADDED = String.format("%05d", BUILD_NUMBER)
         ZIP_FILE = "${GIT_FOLDER}_${BUILD_NUMBER_PADDED}.zip"
