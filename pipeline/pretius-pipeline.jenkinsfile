@@ -24,7 +24,7 @@ pipeline {
         PORT_DB_OMA = (8500 + PORT_OFFSET).toString()
         PORT_HTTP = (80 + PORT_OFFSET).toString()
         PORT_HTTPS = (9043 + PORT_OFFSET).toString()
-        DB = "localhost:${PORT_DB_LISTENER}/FREEPDB1"
+        DB = "localhost:${PORT_DB_LISTENER}/ORCLPDB1"
         BUILD_PASSWORD = 'E'
         SYS = "sys/${BUILD_PASSWORD}@//${DB}"
         SYS_AS_SYSDBA = "${SYS} AS SYSDBA"
