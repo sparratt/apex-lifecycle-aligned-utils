@@ -1,0 +1,9 @@
+#!/bin/bash
+# Get the url to latest release "zip" file
+DOWNLOAD_URL=$(curl --silent https://api.github.com/repos/utPLSQL/utPLSQL-cli/releases/latest | jq -r '.assets[]|select(.name=="utPLSQL-cli.zip").browser_download_url')
+# Download the latest release "zip" file
+curl -sLk $DOWNLOAD_URL -o utplsql-cli.zip
+# Extract downloaded "zip" file
+unzip -q utplsql-cli.zip
+rm utplsql-cli.zip
+mkdir -p $TESTS_DIR

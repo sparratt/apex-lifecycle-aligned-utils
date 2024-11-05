@@ -1,0 +1,70 @@
+pipeline {
+  agent any
+  options {
+    checkoutToSubdirectory('greatapp')
+  }
+  tools {
+    jdk 'JDK11'
+  }
+  environment {
+    GIT_WORKAREA = "$WORKSPACE/greatapp"
+    UTILS        = "$GIT_WORKAREA/utils"
+    SQLCL        = "$WORKSPACE/sqlcl/bin/sql"
+    UTPLSQL      = "$WORKSPACE/utPLSQL-cli/bin/utplsql"
+    TESTS_DIR    = "$WORKSPACE/tests"
+    TESTS_XML    = "$WORKSPACE/tests/results.xml"
+    BUILD_DIR    = "$WORKSPACE/build"
+    BUILD_ZIP    = "$BUILD_DIR/build_${BUILD_NUMBER}.zip"
+    DB           = 'localhost:1521/apextrunk'
+  }
+  stages {
+    stage('Setup') {
+      // --------------------------------------------------------
+      // Uncomment the following 5 lines and adjust appropriately
+      // if you are behind a corporate firewall
+      // --------------------------------------------------------
+      // environment {
+      //   http_proxy   = 'http://example.org:80/'
+      //   https_proxy  = 'http://example.org:80/'
+      //   no_proxy     = 'localhost,127.0.0.1'
+      // }
+      steps {
+        sh '$UTILS/setupLatestSQLcl'
+        sh '$UTILS/setupLatestTestRunner'
+      }
+    }
+    stage('Create Build') {
+      steps {
+        sh '$UTILS/apexgit2buildzip $GIT_WORKAREA'
+      }
+    }
+    stage('Run Unit Tests') {
+      environment {
+        UNITDB = credentials('apex-unittest-credential')
+      }
+      steps {
+        sh '$UTILS/apexinstallbuild $BUILD_ZIP 1597 apex_unit $UNITDB_USR/$UNITDB_PSW@$DB greatappunit'
+        sh '$UTPLSQL run -f=ut_junit_reporter -o $TESTS_XML $UNITDB_USR/$UNITDB_PSW@$DB'
+      }     
+    }
+    stage('Deploy to Test') {
+      environment {
+        TESTDB = credentials('apex-test-credential')
+      }
+      steps {
+        sh '$UTILS/apexinstallbuild $BUILD_ZIP 2597 apex_test $TESTDB_USR/$TESTDB_PSW@$DB greatapptest'
+      }     
+    }        
+  }
+  post {
+    always {
+      archiveArtifacts 'build/**/*.zip'
+      junit 'tests/**/*.xml'
+      cleanWs disableDeferredWipeout: true, 
+              patterns: [
+                [pattern: 'build/*.zip', type: 'INCLUDE'],
+                [pattern: 'tests/*.xml', type: 'INCLUDE']
+              ]
+    }
+  }
+}

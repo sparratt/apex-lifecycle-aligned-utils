@@ -1,0 +1,50 @@
+#!/bin/bash
+# APEX Install Build
+#-----------------------------
+# $1 = Build zip file
+# $2 = APEX App Id
+# $3 = Workspace name
+# $4 = DB connection string
+# $5 = New App Alias (optional)
+#-----------------------------
+# Recreate the temporary stage directory and change directory to it
+if [ -d $TMPDIR/tmp/stage_f$2 ]
+then
+   rm -rf $TMPDIR/tmp/stage_f$2
+fi
+mkdir -p $TMPDIR/tmp/stage_f$2
+cp $1 $TMPDIR/tmp/stage_f$2
+pushd $TMPDIR/tmp/stage_f$2
+unzip $1
+# Install APEX application and apply database schema object changes
+cd $(ls -d */|head -n 1)
+# Install APEX application and schema to stage directory and apply database changes
+sql /nolog <<EOF
+connect $4
+declare
+    l_workspace apex_workspaces.workspace%type := q'[$3]';
+    l_app_id apex_applications.application_id%type := q'[$2]';
+    l_connection varchar2(4000) := q'[$4]';
+    l_schema apex_workspace_schemas.schema%type := upper(regexp_substr(l_connection,'[^/]+'));
+    l_app_alias apex_applications.alias%type := q'[$5]';
+begin
+    apex_application_install.set_workspace(l_workspace);
+    apex_application_install.set_application_id(l_app_id);
+    apex_application_install.set_auto_install_sup_obj( 
+                               p_auto_install_sup_obj => true );
+    if length(l_app_alias) > 0 then
+        apex_application_install.generate_offset();
+        apex_application_install.set_schema(l_schema);
+        apex_application_install.set_application_alias(l_app_alias);
+    end if;
+end;
+/
+@install.sql
+set ddl storage off
+set ddl partitioning off
+set ddl segment_attributes off
+set ddl tablespace off
+set ddl emit_schema off
+lb update -changelog-file database/controller.xml
+EOF
+popd

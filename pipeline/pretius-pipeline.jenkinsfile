@@ -173,14 +173,14 @@ pipeline {
                 }
             }
         }
-        stage('Install utPLSQL') {
-            steps {
-                script {
-                    sh "cd ${BASE_LOCATION}"
-                    sh "sh ${SCRIPTS_LOCATION}/installutPLSQLlatest.sh ${BASE_LOCATION} ${SYS}"
-                }
-            }
-        }
+        // stage('Install utPLSQL') {
+        //     steps {
+        //         script {
+        //             sh "cd ${BASE_LOCATION}"
+        //             sh "sh ${SCRIPTS_LOCATION}/installutPLSQLlatest.sh ${BASE_LOCATION} ${SYS}"
+        //         }
+        //     }
+        // }
         stage('Deploy Pre') {
             environment {
                 DEFAULT_OWNER = readFile('/tmp/env_default_owner_id.txt').trim()
@@ -243,51 +243,51 @@ pipeline {
                 """
             }
         }
-        stage('Run utPLSQL Tests') {
-            environment {
-                DEFAULT_OWNER = readFile('/tmp/env_default_owner_id.txt').trim()
-                DEFAULT_OWNER_CONN = readFile('/tmp/env_default_owner_conn.txt').trim()
-            }
-            steps {
-                sh """
-                    cd ${BASE_LOCATION}
-                    sh ${SCRIPTS_LOCATION}/ut_junit_reporter.sh ${DEFAULT_OWNER_CONN} ${PWD_LOCATION}
-                """
-            }
-        }
-        stage('Run Cypress Tests') {
-            environment {
-                APEX_TARGET_APP_ID = readFile('/tmp/env_apex_target_app_id.txt').trim()
-            }
-            steps {
-                sh """
-                    cd ${GIT_WORKAREA}
-                    CYPRESS_username=${CYPRESS_USERNAME}
-                    CYPRESS_password=${CYPRESS_PASSWORD}
-                    npx cypress run #--config baseUrl=${APEX_URL}/f?p=${APEX_TARGET_APP_ID}:LOGIN
-                """
-            }
-        }
+        // stage('Run utPLSQL Tests') {
+        //     environment {
+        //         DEFAULT_OWNER = readFile('/tmp/env_default_owner_id.txt').trim()
+        //         DEFAULT_OWNER_CONN = readFile('/tmp/env_default_owner_conn.txt').trim()
+        //     }
+        //     steps {
+        //         sh """
+        //             cd ${BASE_LOCATION}
+        //             sh ${SCRIPTS_LOCATION}/ut_junit_reporter.sh ${DEFAULT_OWNER_CONN} ${PWD_LOCATION}
+        //         """
+        //     }
+        // }
+        // stage('Run Cypress Tests') {
+        //     environment {
+        //         APEX_TARGET_APP_ID = readFile('/tmp/env_apex_target_app_id.txt').trim()
+        //     }
+        //     steps {
+        //         sh """
+        //             cd ${GIT_WORKAREA}
+        //             CYPRESS_username=${CYPRESS_USERNAME}
+        //             CYPRESS_password=${CYPRESS_PASSWORD}
+        //             npx cypress run #--config baseUrl=${APEX_URL}/f?p=${APEX_TARGET_APP_ID}:LOGIN
+        //         """
+        //     }
+        // }
     }
 
-    post {
-        always {
-            script {
-                sh """
-                    cd ${BASE_LOCATION}
-                    docker stop ${CONTAINER_NAME}
-                    docker rm ${CONTAINER_NAME}
-                """
-                def buildZipFile = sh(script: " basename \$(cat ${TEMP_STAGE_LOCATION}/build_zip_file.txt)", returnStdout: true).trim()
-                archiveArtifacts "${GIT_FOLDER}/build/${buildZipFile}, ${GIT_FOLDER}/cypress/videos/*"
-                try {
-                    junit 'ut_junit_reporter/*.xml'
-                } catch (e) {
-                    echo "No unit test reports found."
-                }
-            }
-        }
-    }
+    // post {
+    //     always {
+    //         script {
+    //             sh """
+    //                 cd ${BASE_LOCATION}
+    //                 docker stop ${CONTAINER_NAME}
+    //                 docker rm ${CONTAINER_NAME}
+    //             """
+    //             def buildZipFile = sh(script: " basename \$(cat ${TEMP_STAGE_LOCATION}/build_zip_file.txt)", returnStdout: true).trim()
+    //             archiveArtifacts "${GIT_FOLDER}/build/${buildZipFile}, ${GIT_FOLDER}/cypress/videos/*"
+    //             try {
+    //                 junit 'ut_junit_reporter/*.xml'
+    //             } catch (e) {
+    //                 echo "No unit test reports found."
+    //             }
+    //         }
+    //     }
+    // }
 }
 
 

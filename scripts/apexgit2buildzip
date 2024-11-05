@@ -1,0 +1,15 @@
+#!/bin/bash
+# APEX Create Build Zip from Git Workarea
+#----------------------------------------
+# $1 = Git workarea for APEX App
+#-----------------------------
+curDir=${PWD}
+pushd $1 > /dev/null
+dirToZip="${PWD##*/}"
+cd ..
+zip -r $curDir/${dirToZip}_$(date +%y%m%d%H%M).zip \
+    $dirToZip/install.sql \
+    $dirToZip/application \
+    $dirToZip/database \
+    $dirToZip/workspace
+popd > /dev/null

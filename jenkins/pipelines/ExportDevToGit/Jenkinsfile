@@ -1,0 +1,52 @@
+pipeline {
+  agent any
+  options {
+    checkoutToSubdirectory('greatapp')
+  }  
+  tools {
+    jdk 'JDK11'
+  }
+  environment {
+    GIT_WORKAREA = "$WORKSPACE/greatapp"
+    UTILS        = "$GIT_WORKAREA/utils"
+    SQLCL        = "$WORKSPACE/sqlcl/bin/sql"
+    DB           = 'localhost:1521/apextrunk'
+  }
+  stages {
+    stage('Setup') {
+      // --------------------------------------------------------
+      // Uncomment the following 5 lines and adjust appropriately
+      // if you are behind a corporate firewall
+      // --------------------------------------------------------
+      // environment {
+      //   http_proxy   = 'http://example.org:80/'
+      //   https_proxy  = 'http://example.org:80/'
+      //   no_proxy     = 'localhost,127.0.0.1'
+      // }
+      steps {
+        sh '$UTILS/setupLatestSQLcl'
+      }
+    }
+    stage('Export APEX App') {
+      environment {
+        DEVDB = credentials('apex-dev-credential')
+      }
+      steps {
+        sh '$UTILS/apexexport2git 597 $GIT_WORKAREA $DEVDB_USR/$DEVDB_PSW@$DB'
+      }
+    }
+    stage ('Git Commit/Push') {
+      environment {
+        // --------------------------------------------------------
+        // Uncomment the following line and adjust appropriately
+        // if you are behind a corporate firewall
+        // --------------------------------------------------------
+        // http_proxy   = 'http://example.org:80/'        
+        GIT_AUTH = credentials('git-repo-credential')
+      }
+      steps {
+        sh '$UTILS/commitAndPushToGit'
+      }
+    }
+  }
+}

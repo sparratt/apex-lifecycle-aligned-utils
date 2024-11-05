@@ -1,0 +1,27 @@
+#!/bin/bash
+# APEX Export to Git
+#-----------------------------
+# $1 = APEX App Id
+# $2 = Git workarea directory
+# $3 = DB connection string
+#-----------------------------
+# Recreate the temporary stage directory and change directory to it
+if [ -d $TMPDIR/tmp/stage_f$1 ]
+then   
+    rm -rf $TMPDIR/tmp/stage_f$1
+fi
+mkdir -p $TMPDIR/tmp/stage_f$1
+cd $TMPDIR/tmp/stage_f$1
+# Export APEX application and schema to stage directory
+sql /nolog <<EOF
+connect $3
+apex export -applicationid $1 -split -skipExportDate -expOriginalIds -expSupportingObjects Y -expType APPLICATION_SOURCE,READABLE_YAML
+EOF
+# Copy APEX application export files in the ./fNNN subdirectory to Git Working Area directory
+rsync --delete --recursive $TMPDIR/tmp/stage_f$1/f$1/* $2
+# Remove APEX export files, leaving only Liquibase DB export artifacts
+rm -rf $TMPDIR/tmp/stage_f$1/f$1
+# Change directory to the Git Workarea 
+cd $2
+# Add all changed files to the Git worklist from any subdirectory
+git add .

@@ -1,0 +1,10 @@
+#!/bin/bash
+cd $GIT_WORKAREA
+# Uncomment the following line if you are behind a corporate firewall
+# git config http.proxy $http_proxy
+git config user.name "Example Username"
+git config user.email "example.username@example.org"    
+git commit -m "Latest export (build $BUILD_NUMBER)"
+git config --local credential.helper "!f() { echo username=\\$GIT_AUTH_USR; echo password=\\$GIT_AUTH_PSW; }; f"
+git push --set-upstream origin main
+    
