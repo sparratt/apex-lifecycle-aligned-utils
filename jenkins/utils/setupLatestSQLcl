@@ -1,4 +1,5 @@
 #!/bin/bash
-wget -q https://download.oracle.com/otn_software/java/sqldeveloper/sqlcl-latest.zip
+which wget
+/opt/homebrew/bin/wget -q https://download.oracle.com/otn_software/java/sqldeveloper/sqlcl-latest.zip
 unzip -q sqlcl-latest.zip
 rm sqlcl-latest.zip
