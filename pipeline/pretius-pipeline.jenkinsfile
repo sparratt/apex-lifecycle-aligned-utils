@@ -36,6 +36,7 @@ pipeline {
 
         UTILS        = "$GIT_WORKAREA/utils"
         SQLCL        = "$WORKSPACE/sqlcl/bin/sql"
+                            sh "sh ${SCRIPTS_LOCATION}/createtempfolder.sh ${TEMP_STAGE_LOCATION}"
     }
         
     stages {
@@ -51,7 +52,7 @@ pipeline {
       //   no_proxy     = 'localhost,127.0.0.1'
       // }
       steps {
-        sh '$UTILS/setupLatestSQLcl'
+        sh "sh ${SCRIPTS_LOCATION}/setupLatestSQLcl.sh 
 
       }
         }
