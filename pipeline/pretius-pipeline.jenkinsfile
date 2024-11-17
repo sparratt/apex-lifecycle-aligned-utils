@@ -5,9 +5,9 @@ pipeline {
         //Project Settings
         GIT_REPOSITORY = 'https://github.com/Pretius/pretius-apex-lifecycle-aligned-sample-customers'
         GIT_BRANCH = 'main'
-        CREATE_BUILD = true
+        CREATE_BUILD = false
         DEVELOPMENT_DB_CONN = 'MARINEDATAREGISTER/Oracle_2023@//localhost:1521/ORCLPDB1'
-        APPLICATION_ALIAS = "sample_customers"
+        APPLICATION_ALIAS = "MARINEDATAREGISTER"
         // Jenkins Settings
         BASE_LOCATION = "/Users/sllopart/dev/oracle/cicd/"
         PWD_LOCATION = sh(returnStdout: true, script: 'pwd').trim()
