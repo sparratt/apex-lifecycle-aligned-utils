@@ -36,6 +36,22 @@ pipeline {
     }
         
     stages {
+
+    stage('Setup') {
+      // --------------------------------------------------------
+      // Uncomment the following 5 lines and adjust appropriately
+      // if you are behind a corporate firewall
+      // --------------------------------------------------------
+      // environment {
+      //   http_proxy   = 'http://example.org:80/'
+      //   https_proxy  = 'http://example.org:80/'
+      //   no_proxy     = 'localhost,127.0.0.1'
+      // }
+      steps {
+        sh '$UTILS/setupLatestSQLcl'
+
+      }
+        }
         stage('Clear Workspace') {
             steps {
                 deleteDir()
