@@ -28,11 +28,11 @@ pipeline {
       }
     }
     stage('Export APEX App') {
-      environment {
-        DEVDB = credentials('apex-dev-credential')
-      }
+      // environment {
+      //   DEVDB = credentials('apex-dev-credential')
+      // }
       steps {
-        sh '$UTILS/apexexport2git 597 $GIT_WORKAREA $DEVDB_USR/$DEVDB_PSW@$DB'
+        sh '$UTILS/apexexport2git 597 $GIT_WORKAREA MARINEDATAREGISTER/Oracle_2023@$DB'
       }
     }
     stage ('Git Commit/Push') {
