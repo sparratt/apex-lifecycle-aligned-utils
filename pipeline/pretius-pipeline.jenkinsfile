@@ -33,6 +33,9 @@ pipeline {
         CYPRESS_PASSWORD = 'E'
         APEX_URL = "http://localhost:${PORT_HTTP}/ords"
         CONTAINER_NAME = "23cjenkins${PROJECT_SHORT}${BUILD_NUMBER}"
+
+        UTILS        = "$GIT_WORKAREA/utils"
+        SQLCL        = "$WORKSPACE/sqlcl/bin/sql"
     }
         
     stages {
