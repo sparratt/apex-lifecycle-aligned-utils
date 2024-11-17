@@ -99,6 +99,8 @@ pipeline {
                     echo "CONTAINER_NAME: ${CONTAINER_NAME}"
                     echo "CREATE_BUILD: ${CREATE_BUILD}"
                     echo "DEVELOPMENT_DB_CONN: ${DEVELOPMENT_DB_CONN}"
+                    whoami
+                    echo "PATH: ${PATH}
                 """
                 // Environment Specifics
                 // Hardcode over the curly bracketed variables if you want custom values
