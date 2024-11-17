@@ -10,7 +10,7 @@ pipeline {
     GIT_WORKAREA = "$WORKSPACE/greatapp"
     UTILS        = "$GIT_WORKAREA/utils"
     SQLCL        = "$WORKSPACE/sqlcl/bin/sql"
-    DB           = 'localhost:1521/apextrunk'
+    DB           = 'localhost:1521/ORCLPDB1'
   }
   stages {
     stage('Setup') {

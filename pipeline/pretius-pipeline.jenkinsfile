@@ -114,10 +114,10 @@ pipeline {
             steps {
                 sh """
                     echo "making a build"
-                    # cd ${BASE_LOCATION}
-                    # sh ${SCRIPTS_LOCATION}/apexgit2buildzip.sh ${GIT_WORKAREA} ${BUILD_NUMBER_PADDED}
-                    # mv ${ZIP_FILE} ${GIT_WORKAREA}/build
-                    # U_ZIPFILE=${ZIP_FILE}
+                    cd ${BASE_LOCATION}
+                    sh ${SCRIPTS_LOCATION}/apexgit2buildzip.sh ${GIT_WORKAREA} ${BUILD_NUMBER_PADDED}
+                    mv ${ZIP_FILE} ${GIT_WORKAREA}/build
+                    U_ZIPFILE=${ZIP_FILE}
                 """
             }
         }
