@@ -34,28 +34,13 @@ pipeline {
         APEX_URL = "http://localhost:${PORT_HTTP}/ords"
         CONTAINER_NAME = "23cjenkins${PROJECT_SHORT}${BUILD_NUMBER}"
 
-        UTILS        = "$GIT_WORKAREA/utils"
-        SQLCL        = "$WORKSPACE/sqlcl/bin/sql"
-                            sh "sh ${SCRIPTS_LOCATION}/createtempfolder.sh ${TEMP_STAGE_LOCATION}"
+
     }
         
     stages {
 
-    stage('Setup') {
-      // --------------------------------------------------------
-      // Uncomment the following 5 lines and adjust appropriately
-      // if you are behind a corporate firewall
-      // --------------------------------------------------------
-      // environment {
-      //   http_proxy   = 'http://example.org:80/'
-      //   https_proxy  = 'http://example.org:80/'
-      //   no_proxy     = 'localhost,127.0.0.1'
-      // }
-      steps {
-        sh "sh ${SCRIPTS_LOCATION}/setupLatestSQLcl.sh 
 
-      }
-        }
+        
         stage('Clear Workspace') {
             steps {
                 deleteDir()
