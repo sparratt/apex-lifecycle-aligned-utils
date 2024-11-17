@@ -28,7 +28,7 @@ pipeline {
         BUILD_PASSWORD = 'Oracle_2023'
         SYS = "sys/${BUILD_PASSWORD}@//${DB}"
         SYS_AS_SYSDBA = "${SYS} AS SYSDBA"
-        TEMP_STAGE_LOCATION = "/tmp/stage_${BUILD_NUMBER}"
+        TEMP_STAGE_LOCATION = "/Users/sllopart/dev/builds/build_${BUILD_NUMBER}"
         CYPRESS_USERNAME = 'TEST_USER'
         CYPRESS_PASSWORD = 'E'
         APEX_URL = "http://localhost:${PORT_HTTP}/ords"
